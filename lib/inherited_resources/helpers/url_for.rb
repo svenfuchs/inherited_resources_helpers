@@ -28,6 +28,12 @@ module InheritedResources
           send(:"#{action}_url", args.extract_options!.reverse_merge(:routing_type => :path))
         end
       end
+
+      alias :resources_url :index_url
+      alias :resources_path :index_path
+
+      alias :resource_url :show_url
+      alias :resource_path :show_path
     end
   end
 end
