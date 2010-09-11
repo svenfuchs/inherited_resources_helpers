@@ -1,6 +1,10 @@
 module InheritedResources
   module Helpers
     module UrlFor
+      def self.included(base)
+        base.send(:helper_method, public_instance_methods(false))
+      end
+
       def index_url(options = {})
         polymorphic_url(parent_resources << resource_class, options)
       end

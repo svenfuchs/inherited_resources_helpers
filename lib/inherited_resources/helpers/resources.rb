@@ -1,6 +1,10 @@
 module InheritedResources
   module Helpers
     module Resources
+      def self.included(base)
+        base.send(:helper_method, public_instance_methods(false))
+      end
+
       def resource
         member_action? ? super : build_resource
       end
