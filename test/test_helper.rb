@@ -15,7 +15,7 @@ require "rails/railtie"
 class ApplicationController < ActionController::Base; end
 
 require 'inherited_resources'
-require 'inherited_resources_helpers'
+require 'inherited_resources/helpers'
 require File.expand_path('../test_setup', __FILE__)
 
 DatabaseCleaner.strategy = :truncation

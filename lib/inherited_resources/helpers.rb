@@ -1,3 +1,5 @@
+require 'inherited_resources'
+
 module InheritedResources
   module Helpers
     autoload :Resources, 'inherited_resources/helpers/resources'

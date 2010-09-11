@@ -1,22 +1,28 @@
 module InheritedResources
   module Helpers
     module UrlFor
-      def index_path
-        polymorphic_path(parent_resources << resource_class)
+      def index_url(options = {})
+        polymorphic_url(parent_resources << resource_class, options)
       end
 
-      def new_path
-        polymorphic_path(parent_resources.unshift(:new) << resource_class.name.underscore)
+      def new_url(options = {})
+        polymorphic_url(parent_resources.unshift(:new) << resource_class.name.underscore, options)
       end
 
-      def show_path
-        raise "can't generate show_path because the current resource (#{resource.inspect}) is a new record" if resource.new_record?
-        polymorphic_path(resources)
+      def show_url(options = {})
+        raise "can't generate show_url because the current resource (#{resource.inspect}) is a new record" if resource.new_record?
+        polymorphic_url(resources, options)
       end
 
-      def edit_path
-        raise "can't generate edit_path because the current resource (#{resource.inspect}) is a new record" if resource.new_record?
-        polymorphic_path(resources.unshift(:edit))
+      def edit_url(options = {})
+        raise "can't generate edit_url because the current resource (#{resource.inspect}) is a new record" if resource.new_record?
+        polymorphic_url(resources.unshift(:edit), options)
+      end
+
+      [:index, :new, :show, :edit].each do |action|
+        define_method(:"#{action}_path") do |*args|
+          send(:"#{action}_url", args.extract_options!.reverse_merge(:routing_type => :path))
+        end
       end
     end
   end
