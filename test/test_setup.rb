@@ -23,13 +23,18 @@ class Comment < ActiveRecord::Base
 end
 
 module Admin
-  class PostsController < InheritedResources::Base
-    belongs_to :blog
-
+  class BlogsController < InheritedResources::Base
     routes = ActionDispatch::Routing::RouteSet.new
     routes.draw { namespace(:admin) { resources(:blogs) { resources(:posts) { resources(:comments) } } } }
     include routes.url_helpers
+    public :resource
+  end
 
+  class PostsController < InheritedResources::Base
+    belongs_to :blog
+    routes = ActionDispatch::Routing::RouteSet.new
+    routes.draw { namespace(:admin) { resources(:blogs) { resources(:posts) { resources(:comments) } } } }
+    include routes.url_helpers
     public :resource
   end
 end
