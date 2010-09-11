@@ -6,7 +6,7 @@ module InheritedResources
       end
 
       def index_url(options = {})
-        polymorphic_url(parent_resources << resource_class, options)
+        polymorphic_url(parent_resources << resource_class.base_class, options)
       end
 
       def new_url(options = {})
@@ -31,7 +31,7 @@ module InheritedResources
       end
 
       def parent_index_url(options = {})
-        polymorphic_url(parent_resources[0..-2] << parent_resources.last.class, options)
+        polymorphic_url(parent_resources[0..-2] << parent_resources.last.class.base_class, options)
       end
 
       def parent_new_url(options = {})
@@ -56,7 +56,7 @@ module InheritedResources
         raise_invalid_url_helper("children_index_url(#{:child.inspect})", resource) if resource.new_record?
         polymorphic_url(resources << child.to_s.pluralize, options)
       end
-      
+
       def children_index_path(*args)
         children_index_url(*args << args.extract_options!.reverse_merge(:routing_type => :path))
       end
@@ -65,7 +65,7 @@ module InheritedResources
         raise_invalid_url_helper("children_new_url(#{:child.inspect})", resource) if resource.new_record?
         polymorphic_url(resources.unshift(:new) << child.to_s.singularize, options)
       end
-      
+
       def children_new_path(*args)
         children_new_url(*args << args.extract_options!.reverse_merge(:routing_type => :path))
       end
@@ -81,9 +81,9 @@ module InheritedResources
 
       alias :parent_resource_url :parent_show_url
       alias :parent_resource_path :parent_show_path
-      
+
       protected
-         
+
         def raise_invalid_url_helper(method, resource)
           raise "can't generate #{method} because the current resource (#{resource.inspect}) is a new record"
         end
