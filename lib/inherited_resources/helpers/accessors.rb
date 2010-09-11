@@ -10,6 +10,7 @@ module InheritedResources
           symbols = parents_symbols + [:self]
           symbols.inject([]) do |parents, name| 
             define_resource_accessor(name, parents)
+            helper_method(name)
             parents << name
           end
           @resource_accessors_defined = true
