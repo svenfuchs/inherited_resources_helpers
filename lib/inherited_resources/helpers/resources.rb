@@ -5,6 +5,14 @@ module InheritedResources
         base.send(:helper_method, public_instance_methods(false))
       end
 
+      def instance_name
+        resource.type.underscore.singularize
+      end
+
+      def collection_name
+        resource.type.underscore.pluralize
+      end
+
       def resource
         member_action? ? super : build_resource
       end
