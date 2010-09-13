@@ -6,9 +6,16 @@ module InheritedResources
       end
 
       module ClassMethods
+        def begin_of_association_chain(symbol)
+          resources_configuration[:self][:begin_of_association_chain] = symbol
+          define_method(:_begin_of_association_chain) { send(symbol) }
+        end
+
         def define_resource_accessors(controller)
           symbols = parents_symbols + [:self]
-          symbols.inject([]) do |parents, symbol|
+          targets = [resources_configuration[:self][:begin_of_association_chain]].compact
+
+          symbols.uniq.inject(targets) do |parents, symbol|
             config = resources_configuration[symbol]
             name   = symbol == :self ? config[:instance_name] : symbol
 
