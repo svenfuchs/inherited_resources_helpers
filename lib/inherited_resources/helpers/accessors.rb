@@ -43,13 +43,9 @@ module InheritedResources
         end
       end
 
-      def respond_to?(name, include_private = false)
-        self.class.resource_accessor?(name) || super
-      end
-
-      def method_missing(name, *args, &block)
-        self.class.define_resource_accessors(self) unless self.class.resource_accessors_defined?
-        respond_to?(name) ? send(name) : super
+      def initialize(*)
+        self.class.define_resource_accessors(self)
+        super
       end
     end
   end
