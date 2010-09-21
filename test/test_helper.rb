@@ -29,11 +29,11 @@ Test::Unit::TestCase.class_eval do
     DatabaseCleaner.clean
   end
 
-  def setup_controller(klass)
+  def setup_controller(klass, params = {})
     klass.new.tap do |controller|
       controller.request  = ActionDispatch::TestRequest.new
       controller.response = ActionDispatch::TestResponse.new
-      controller.params = { :action => 'show' }
+      controller.params = params.reverse_merge(:action => 'show')
       yield(controller) if block_given?
     end
   end

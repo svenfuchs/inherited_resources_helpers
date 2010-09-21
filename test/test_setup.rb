@@ -10,6 +10,11 @@ ActiveRecord::Schema.define :version => 0 do
     t.references :blog
     t.string :title
   end
+
+  create_table :comments, :force => true do |t|
+    t.references :post
+    t.string :text
+  end
 end
 
 class Blog < ActiveRecord::Base
@@ -17,6 +22,7 @@ class Blog < ActiveRecord::Base
 end
 
 class Post < ActiveRecord::Base
+  has_many :comments
 end
 
 class Comment < ActiveRecord::Base
