@@ -11,14 +11,17 @@ class ResourcesUrlHelpersTest < Test::Unit::TestCase
     @blog = Blog.create
     @post = blog.posts.create!
     @comment = post.comments.create!
-    @params = { :blog_id => blog.id, :id => post.id }
+    @params = {  }
   end
 
   def assert_path(expected, kind, options = { :raises => [] })
     ACTIONS.each do |action|
-      controller = setup_controller(Admin::PostsController, params.merge(:action => action))
+      params = { :action => action, :blog_id => blog.id }
+      params.merge!(:id => post.id) if MEMBER_ACTIONS.include?(action)
+      controller = setup_controller(Admin::PostsController, params)
+
       if options[:raises].include?(action)
-        assert_raises(RuntimeError) { controller.send(*Array(kind)) }
+        assert_raises(RuntimeError, NoMethodError) { controller.send(*Array(kind)) }
       else
         actual = controller.send(*Array(kind))
         assert_equal(expected, actual, "expected #{kind} to be #{expected.inspect} on action #{action} but was #{actual.inspect}")

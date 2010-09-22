@@ -55,24 +55,29 @@ module InheritedResources
       alias :resource_url :show_url
       alias :resource_path :show_path
 
+      alias :destroy_url :show_url
+      alias :destroy_path :show_path
+
       alias :parent_resources_url :parent_index_url
       alias :parent_resources_path :parent_index_path
 
       alias :parent_resource_url :parent_show_url
       alias :parent_resource_path :parent_show_path
-      
+
       protected
-      
-        def normalize_resources_for_url(resources, &default)
-          options = resources.extract_options!
-          resources = if resources.empty?
+
+        def normalize_resources_for_url(args, &default)
+          options = args.extract_options!
+          args = if args.empty?
             default.call
-          elsif resources.first.is_a?(Array)
-            resources.first
+          elsif args.first.is_a?(Array)
+            args.first
           else
-            self.resources + resources
+            resources = self.resources.dup
+            resources.pop if resources.last.new_record?
+            resources + args
           end
-          [resources, options]
+          [args, options]
         end
     end
   end

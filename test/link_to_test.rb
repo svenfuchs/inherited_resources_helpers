@@ -6,18 +6,53 @@ class LinkToTest < Test::Unit::TestCase
 
   attr_reader :controller, :blog, :post
 
+  delegate :t, :to => :I18n
+
   def setup
     @blog = Blog.create
     @post = blog.posts.create!
-    @controller = setup_controller(Admin::PostsController)
-    controller.params = { :action => 'show', :blog_id => blog.id, :id => post.id }
+    @controller = setup_controller(Admin::BlogsController)
+    controller.params = { :action => 'show', :id => blog.id }
+    I18n.backend.store_translations(:en,
+      :index   => 'index',
+      :destroy => 'delete',
+      :listing => 'Listing',
+      :confirm_delete => 'Kill da %{model_name}?'
+    )
   end
 
-  def t(*)
-    'foo'
+  test "link_to_index(:class => :bar)" do
+    expected = %(<a href="/admin/blogs" class="index bar">index</a>)
+    assert_equal expected, link_to_index(:class => :bar)
   end
 
-  test "link_to_index" do
-    assert_equal %(<a href="/admin/blogs/#{blog.id}/posts" class="bar">foo</a>), link_to_index(:class => :bar)
+  test "link_to_index('listing', :class => :bar)" do
+    expected = %(<a href="/admin/blogs" class="index bar">listing</a>)
+    assert_equal expected, link_to_index('listing', :class => :bar)
+  end
+
+  test "link_to_index(:listing, :class => :bar)" do
+    expected = %(<a href="/admin/blogs" class="index bar">Listing</a>)
+    assert_equal expected, link_to_index(:listing, :class => :bar)
+  end
+
+  test "link_to_index(:listing, 'url/to/foo', :class => :bar)" do
+    expected = %(<a href="url/to/foo" class="index bar">Listing</a>)
+    assert_equal expected, link_to_index(:listing, 'url/to/foo', :class => :bar)
+  end
+
+  test "link_to_index(:listing, :posts, :class => :bar)" do
+    expected = %(<a href="/admin/blogs/#{blog.id}/posts" class="index bar">Listing</a>)
+    assert_equal expected, link_to_index(:listing, :posts, :class => :bar)
+  end
+
+  test "link_to_index(:listing, [:admin, blog, :posts], :class => :bar)" do
+    expected = %(<a href="/admin/blogs/#{blog.id}/posts" class="index bar">Listing</a>)
+    assert_equal expected, link_to_index(:listing, [:admin, blog, :posts], :class => :bar)
+  end
+
+  test "link_to_destroy" do
+    expected = %(<a href="/admin/blogs/#{blog.id}/posts/#{post.id}" class="destroy" data-confirm="Kill da Post?" data-method="delete" rel="nofollow">delete</a>)
+    assert_equal expected, link_to_destroy(post)
   end
 end

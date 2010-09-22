@@ -17,7 +17,7 @@ module InheritedResources
 
       def new_url(resources, options = {})
         if resources.last.respond_to?(:new_record?)
-          resources[-1, 1] = resources.last.class.name.underscore 
+          resources[-1, 1] = resources.last.class.name.underscore
         elsif resources.last.is_a?(Class) && resources.last < ActiveRecord::Base
           resources[-1, 1] = resources.last.name.underscore
         end
