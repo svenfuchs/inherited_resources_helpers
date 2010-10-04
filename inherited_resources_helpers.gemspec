@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'inherited_resources/helpers/version'
+require 'inherited_resources_helpers/version'
 
 Gem::Specification.new do |s|
   s.name         = "inherited_resources_helpers"
