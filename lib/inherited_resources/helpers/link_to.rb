@@ -13,7 +13,7 @@ module InheritedResources
           if action == :destroy
             model = args.last.class.respond_to?(:model_name) ? args.last : controller.resource
             name  = model.class.model_name.human
-            options.reverse_merge!(:method => :delete, :confirm => t(:'.confirm_delete', :model_name => name))
+            options.reverse_merge!(:method => :delete, :confirm => t(:'.confirm_destroy', :model_name => name))
           end
 
           link_text = args.shift if args.first.is_a?(String)
