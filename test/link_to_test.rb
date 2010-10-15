@@ -17,7 +17,7 @@ class LinkToTest < Test::Unit::TestCase
       :index   => 'index',
       :destroy => 'delete',
       :listing => 'Listing',
-      :confirm_delete => 'Kill da %{model_name}?'
+      :confirm_destroy => 'Kill da %{model_name}?'
     )
   end
 

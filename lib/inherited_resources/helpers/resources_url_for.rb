@@ -8,7 +8,7 @@ module InheritedResources
       end
 
       def index_url(*resources)
-        resources = normalize_resources_for_url(resources) { parent_resources << resource_class.base_class }
+        resources = normalize_resources_for_url(resources) { parent_resources << resource_class }
         super(*resources)
       end
 
