@@ -22,6 +22,10 @@ module InheritedResources
         @resources.dup
       end
 
+      def parent_resource
+        parent_resources.last
+      end
+
       def parent_resources
         resources[0..-2]
       end
