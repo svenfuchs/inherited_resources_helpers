@@ -5,10 +5,11 @@ class ResourcesUrlHelpersTest < Test::Unit::TestCase
   MEMBER_ACTIONS     = [:show, :edit, :update, :destroy]
   ACTIONS = COLLECTION_ACTIONS + MEMBER_ACTIONS
 
-  attr_reader :controller, :params, :blog, :post, :comment
+  attr_reader :controller, :params, :blog, :category, :post, :comment
 
   def setup
     @blog = Blog.create
+    @category = blog.categories.create!
     @post = blog.posts.create!
     @comment = post.comments.create!
     @params = {  }
@@ -171,19 +172,35 @@ class ResourcesUrlHelpersTest < Test::Unit::TestCase
 
   # parent paths
 
-  test "parent_index_path returns /admin/blogs" do
-    assert_path "/admin/blogs", :parent_index_path
+  test "index_parent_path returns /admin/blogs" do
+    assert_path "/admin/blogs", :index_parent_path
   end
 
-  test "parent_new_path returns /admin/blogs/new" do
-    assert_path "/admin/blogs/new", :parent_new_path
+  test "new_parent_path returns /admin/blogs/new" do
+    assert_path "/admin/blogs/new", :new_parent_path
   end
 
-  test "parent_show_path returns /admin/blogs/1" do
-    assert_path "/admin/blogs/#{blog.id}", :parent_show_path
+  test "show_parent_path returns /admin/blogs/1" do
+    assert_path "/admin/blogs/#{blog.id}", :show_parent_path
   end
 
-  test "parent_edit_path returns /admin/blogs/1/edit" do
-    assert_path "/admin/blogs/#{blog.id}/edit", :parent_edit_path
+  test "edit_parent_path returns /admin/blogs/1/edit" do
+    assert_path "/admin/blogs/#{blog.id}/edit", :edit_parent_path
+  end
+
+  test "index_parent_path(:categories) returns /admin/blogs/1/categories" do
+    assert_path "/admin/blogs/#{blog.id}/categories", [:index_parent_path, :categories]
+  end
+
+  test "new_parent_path(:category) returns /admin/blogs/1/categories/new" do
+    assert_path "/admin/blogs/#{blog.id}/categories/new", [:new_parent_path, :category]
+  end
+
+  test "show_parent_path(category) returns /admin/blogs/1/categories/1" do
+    assert_path "/admin/blogs/#{blog.id}/categories/#{category.id}", [:show_parent_path, category]
+  end
+
+  test "edit_parent_path(category) returns /admin/blogs/1/categories/1/edit" do
+    assert_path "/admin/blogs/#{blog.id}/categories/#{category.id}/edit", [:edit_parent_path, category]
   end
 end

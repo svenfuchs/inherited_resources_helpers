@@ -27,23 +27,29 @@ module InheritedResources
         super(*resources)
       end
 
-      def parent_index_url(options = {})
-        polymorphic_url(parent_resources[0..-2] << parent_resources.last.class.base_class, options)
+      def index_parent_url(*resources)
+        resources = normalize_parent_resources_for_url(resources) { parent_resources[0..-2] << parent_resources.last.class.base_class }
+        polymorphic_url(*resources)
       end
 
-      def parent_new_url(options = {})
-        polymorphic_url(parent_resources[0..-2].unshift(:new) << parent_resources.last.class.name.underscore, options)
+      def new_parent_url(*resources)
+        resources, options = *normalize_parent_resources_for_url(resources) { parent_resources[0..-2] << parent_resources.last.class.name.underscore }
+        resources.unshift(:new)
+        polymorphic_url(resources, options)
       end
 
-      def parent_show_url(options = {})
-        polymorphic_url(parent_resources, options)
+      def show_parent_url(*resources)
+        resources = normalize_parent_resources_for_url(resources) { parent_resources }
+        polymorphic_url(*resources)
       end
 
-      def parent_edit_url(options = {})
-        polymorphic_url(parent_resources.unshift(:edit), options)
+      def edit_parent_url(*resources)
+        resources, options = normalize_parent_resources_for_url(resources) { parent_resources }
+        resources.unshift(:edit)
+        polymorphic_url(resources, options)
       end
 
-      [:parent_index, :parent_new, :parent_show, :parent_edit].each do |action|
+      [:index_parent, :new_parent, :show_parent, :edit_parent].each do |action|
         define_method(:"#{action}_path") do |*args|
           send(:"#{action}_url", *args << args.extract_options!.reverse_merge(:routing_type => :path))
         end
@@ -58,11 +64,7 @@ module InheritedResources
       alias :destroy_url :show_url
       alias :destroy_path :show_path
 
-      alias :parent_resources_url :parent_index_url
-      alias :parent_resources_path :parent_index_path
-
-      alias :parent_resource_url :parent_show_url
-      alias :parent_resource_path :parent_show_path
+      alias :parent_path :show_parent_path
 
       protected
 
@@ -74,6 +76,20 @@ module InheritedResources
             args.first
           else
             resources = self.resources.dup
+            resources.pop if resources.last.new_record?
+            resources + args
+          end
+          [args, options]
+        end
+
+        def normalize_parent_resources_for_url(args, &default)
+          options = args.extract_options!
+          args = if args.empty?
+            default.call
+          elsif args.first.is_a?(Array)
+            args.first
+          else
+            resources = self.parent_resources.dup
             resources.pop if resources.last.new_record?
             resources + args
           end

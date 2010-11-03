@@ -2,9 +2,11 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 
 require 'rubygems'
 require 'test/unit'
+require 'bundler/setup'
+
 require 'test_declarative'
-require 'ruby-debug'
 require 'database_cleaner'
+# require 'ruby-debug'
 
 require 'active_support'
 require "active_support/core_ext/object/with_options"

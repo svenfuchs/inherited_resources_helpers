@@ -6,6 +6,11 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :name
   end
 
+  create_table :categories, :force => true do |t|
+    t.references :blog
+    t.string :name
+  end
+
   create_table :posts, :force => true do |t|
     t.references :blog
     t.string :title
@@ -19,6 +24,10 @@ end
 
 class Blog < ActiveRecord::Base
   has_many :posts
+  has_many :categories
+end
+
+class Category < ActiveRecord::Base
 end
 
 class Post < ActiveRecord::Base
@@ -31,7 +40,7 @@ end
 module Admin
   class BlogsController < InheritedResources::Base
     routes = ActionDispatch::Routing::RouteSet.new
-    routes.draw { namespace(:admin) { resources(:blogs) { resources(:posts) { resources(:comments) } } } }
+    routes.draw { namespace(:admin) { resources(:blogs) { resources(:categories); resources(:posts) { resources(:comments) } } } }
     include routes.url_helpers
     public :resource
   end
@@ -39,7 +48,7 @@ module Admin
   class PostsController < InheritedResources::Base
     belongs_to :blog
     routes = ActionDispatch::Routing::RouteSet.new
-    routes.draw { namespace(:admin) { resources(:blogs) { resources(:posts) { resources(:comments) } } } }
+    routes.draw { namespace(:admin) { resources(:blogs) { resources(:categories); resources(:posts) { resources(:comments) } } } }
     include routes.url_helpers
     public :resource
   end
