@@ -9,16 +9,18 @@ module InheritedResources
         define_method(:"link_to_#{action}") do |*args|
           options = args.extract_options!
           options[:class] = [action, options[:class]].compact.join(' ')
+          scope = options.key?(:scope) ? options.delete(:scope) : 'actions'
 
           if action == :destroy
-            model = args.last.class.respond_to?(:model_name) ? args.last : controller.resource
-            name  = model.class.model_name.human
-            options.reverse_merge!(:method => :delete, :confirm => t(:'.confirm_destroy', :model_name => name))
+            model   = args.last.class.respond_to?(:model_name) ? args.last : controller.resource
+            name    = model.class.model_name.human
+            confirm = t(:'.confirmations.destroy', :model_name => name)
+            options.reverse_merge!(:method => :delete, :confirm => confirm)
           end
 
           link_text = args.shift if args.first.is_a?(String)
           link_text = t(args.shift) if args.first.is_a?(Symbol)
-          link_text ||= t(:".#{action}")
+          link_text ||= t(:".#{[scope, action].compact.join('.')}")
 
           url = if args.first.is_a?(String)
             args.first
@@ -32,3 +34,4 @@ module InheritedResources
     end
   end
 end
+

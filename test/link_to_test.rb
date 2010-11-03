@@ -14,10 +14,9 @@ class LinkToTest < Test::Unit::TestCase
     @controller = setup_controller(Admin::BlogsController)
     controller.params = { :action => 'show', :id => blog.id }
     I18n.backend.store_translations(:en,
-      :index   => 'index',
-      :destroy => 'delete',
       :listing => 'Listing',
-      :confirm_destroy => 'Kill da %{model_name}?'
+      :actions => { :index   => 'index', :destroy => 'delete' },
+      :confirmations => { :destroy => 'Kill da %{model_name}?' }
     )
   end
 
