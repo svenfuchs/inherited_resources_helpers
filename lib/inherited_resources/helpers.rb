@@ -12,12 +12,18 @@ module InheritedResources
   Base.class_eval do
     class << self
       def inherited_with_helpers(base)
+        inherited_without_helpers(base)
         base.send :include, Helpers::Resources
         base.send :include, Helpers::ResourcesUrlFor
         base.send :include, Helpers::Accessors
-        inherited_without_helpers(base)
       end
       alias_method_chain :inherited, :helpers # TODO ugh.
+    end
+  end
+
+  UrlHelpers.module_eval do
+    def generate_url_and_path_helpers(prefix, name, resource_segments, resource_ivars)
+      # FIXME ... we define our own helpers for now, should merge with inherited_resources.
     end
   end
 end
