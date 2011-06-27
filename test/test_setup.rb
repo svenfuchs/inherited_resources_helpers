@@ -52,6 +52,14 @@ module Admin
     include routes.url_helpers
     public :resource
   end
+
+  class CommentsController < InheritedResources::Base
+    nested_belongs_to :blog, :post
+    routes = ActionDispatch::Routing::RouteSet.new
+    routes.draw { namespace(:admin) { resources(:blogs) { resources(:categories); resources(:posts) { resources(:comments) } } } }
+    include routes.url_helpers
+    public :resource
+  end
 end
 
 

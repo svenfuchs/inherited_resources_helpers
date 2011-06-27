@@ -33,7 +33,7 @@ module InheritedResources
           if name == resources_configuration[:self][:instance_name]
             define_method(name) { resource }
           elsif target.is_a?(Symbol)
-            define_method(name) { send(target).send(config[:collection_name], params[param]).first }
+            define_method(name) { send(target).send(config[:collection_name]).send(config[:finder] || :find, params[config[:param]]) }
           else
             define_method(name) { target.send(config[:finder] || :find, params[param]) }
           end
